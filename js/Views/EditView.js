@@ -13,11 +13,11 @@ app.collectionSelectedFromLog = new app.FoodCollection();
 
 app.EditView = Backbone.View.extend({
 
-	tagName: 'section',
+    tagName: 'section',
 
     // el: '#user-view',
 
-	events: {
+    events: {
 
         // 'click button#all-selected' : 'selectAll',
 
@@ -44,37 +44,37 @@ app.EditView = Backbone.View.extend({
 
     initialize: function(){
 
-    	app.dayLog.each(function(day){
-    		if(day.get('id') === app.dateSelectedFromLog){
-    			//Retrieve Day Model that is being edited from app.dayLog
+        app.dayLog.each(function(day){
+            if(day.get('id') === app.dateSelectedFromLog){
+                //Retrieve Day Model that is being edited from app.dayLog
                 this.editDay = day;
 
                 app.collectionSelectedFromLog = new app.FoodCollection(day.get('collection'));
 
-    			/** This code is designed to catch situations when either a Collection, or an array
-    			  * are passed into the initialise function. If day.get('collection') returns a Collection
-                  *	then a.models is used to construct a new FoodCollection
+                /** This code is designed to catch situations when either a Collection, or an array
+                  * are passed into the initialise function. If day.get('collection') returns a Collection
+                  * then a.models is used to construct a new FoodCollection
                   */
-    			var a = day.get('collection');
-    			if(a.models){
-    				app.collectionSelectedFromLog = new app.FoodCollection(a.models);
-    			} else {
-    				/** If day.get('collection') returns an array, it is passed directly to app.FoodCollection constructor*/
+                var a = day.get('collection');
+                if(a.models){
+                    app.collectionSelectedFromLog = new app.FoodCollection(a.models);
+                } else {
+                    /** If day.get('collection') returns an array, it is passed directly to app.FoodCollection constructor*/
 
                     app.collectionSelectedFromLog = new app.FoodCollection(day.get('collection'));
-    			}
-    		}
-    	}, this);
+                }
+            }
+        }, this);
 
 
-    	//Catches instances where user has not selected any Day from the LogView
+        //Catches instances where user has not selected any Day from the LogView
 
-    	if (typeof this.editDay === 'undefined' || this.editDay === null) {
-    		//Creates a new Day model instance to avoid errors further in code
-    		this.editDay = new app.Day();
-    		//Clears out app.collectionSlectedFromLog when no day selected from Log View by user
-    		app.collectionSelectedFromLog = new app.FoodCollection();
-		}
+        if (typeof this.editDay === 'undefined' || this.editDay === null) {
+            //Creates a new Day model instance to avoid errors further in code
+            this.editDay = new app.Day();
+            //Clears out app.collectionSlectedFromLog when no day selected from Log View by user
+            app.collectionSelectedFromLog = new app.FoodCollection();
+        }
 
         // Removed the following as no longer required
         //<button type="button" class="delete-button" id="clear-selected">Delete</button>
@@ -86,8 +86,6 @@ app.EditView = Backbone.View.extend({
         //'Delete Day' button
         $(this.el).append('<br><h1 id="delete-button-container"><button class="delete-day-button" id="delete-day-button" type="button">Delete Day</button></h1>')
         $(this.el).prepend('<h1 id="user-message"></h1>');
-
-        $(this.el).append('<h1 id="user-message-footer"></h1><hr><br>');
 
         _.bindAll(this, 'render', 'selectAll', 'clearSelected', 'addServing', 'removeFood', 'saveFoods', 'addToEditedFoods', 'emptyMessageDiv', 'deleteDay', 'cancelDeletion', 'confirmDeletion', 'saveLog', 'duplicateServing', 'backToDayLog');
 
@@ -108,16 +106,6 @@ app.EditView = Backbone.View.extend({
 
         this.deleteButtonContainer = $('#delete-button-container', this.el);
 
-        this.userMessageFooter = $('#user-message-footer', this.el);
-
-        //Reference to body DOM element
-
-        this.bodyReference = $('html, body');
-
-        // Calcs document height for use later in code to redirect user to base of page
-
-        this.docHeight = $(document).height();
-
         this.render();
 
         this.counter = 0;
@@ -125,16 +113,16 @@ app.EditView = Backbone.View.extend({
 
     render: function(){
 
-    	//Clear out list of previously rendered entities
+        //Clear out list of previously rendered entities
 
         this.list.empty();
         if (typeof app.dateSelectedFromLog === 'undefined' || app.dateSelectedFromLog === null || app.dateSelectedFromLog === '' || app.daySelectedFromLog === ''){
 
-			$('#date-picked', this.el).text('No day selected.');
+            $('#date-picked', this.el).text('No day selected.');
             $('#date-picked', this.el).append('<br>Please select a day from the "Daily Log" tab.');
-		} else {
-			$('#date-picked', this.el).text(app.daySelectedFromLog + ', '+app.dateSelectedFromLog);
-		}
+        } else {
+            $('#date-picked', this.el).text(app.daySelectedFromLog + ', '+app.dateSelectedFromLog);
+        }
 
         app.collectionSelectedFromLog.each(function(model){
 
@@ -238,11 +226,11 @@ app.EditView = Backbone.View.extend({
 
     saveFoods: function(){
 
-    	app.dayLog.each(function(day){
-    		if(day.get('id') === app.dateSelectedFromLog){
-    			day.set({'collection': app.collectionSelectedFromLog });
-    		}
-    	}, this);
+        app.dayLog.each(function(day){
+            if(day.get('id') === app.dateSelectedFromLog){
+                day.set({'collection': app.collectionSelectedFromLog });
+            }
+        }, this);
     },
 
     addToEditedFoods: function(){
@@ -280,17 +268,13 @@ app.EditView = Backbone.View.extend({
 
             // Passes to helper function to notify user indicating what foods were added to their tracked foods
 
-            app.notifyUser('You just added the following to the day you are editing:<br>' + app.myDay, myList, '#user-message-footer', 'other');
+            app.notifyUser('You just added the following to the day you are editing:<br>' + app.myDay, myList, '#user-message', 'other');
             this.userMessage.addClass('styled');
 
         }
 
         console.log(myList);
         console.log(app.collectionSelectedFromLog);
-
-        //Scrolls user's view to bottom of screen so that user message can be viewed and added food seen
-
-        this.bodyReference.scrollTop(this.docHeight);
 
         //Force call to render method
         this.render();
