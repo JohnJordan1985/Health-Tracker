@@ -14,6 +14,10 @@ var app = app || {};
 
 app.globalUserMessage = "";
 
+// Variable that holds value of a food item selected from the IntegratedSearchView
+
+app.myClickedFood = "";
+
 app.AppView = Backbone.View.extend({
     el: $('body'),
 

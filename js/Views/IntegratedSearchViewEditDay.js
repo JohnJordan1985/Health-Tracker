@@ -15,9 +15,12 @@ app.IntegratedSearchViewEditDay = Backbone.View.extend({
     events: {
         'click #submit-button': 'submit',
 
-        'keypress input#search-box': 'submitIfEnterKeyPressed'
+        'keypress input#search-box': 'submitIfEnterKeyPressed',
+
         // Changed this code to call eatCheckedFoods when user clicks on food item in list
-        // 'click button#add-today' : 'eatCheckedFoods',
+
+        //If user clicks on item from IntegratedSearchView returned list
+        'click .search-results' : 'eatCheckedFoods'
         //Moved this call to parent view, Edit Day
         // 'click .search-results': 'addToEditedFoods'
     },
@@ -56,6 +59,14 @@ app.IntegratedSearchViewEditDay = Backbone.View.extend({
         this.list = $('#list', this.el);
         //cache reference to user-message DOM element
         this.userMessage = $('#user-message', this.el);
+
+        //Reference to body DOM element
+
+        this.bodyReference = $('html, body');
+
+        // Calcs document height for use later in code to redirect user to base of page
+
+        this.docHeight = $(document).height();
     },
 
     render: function(){
@@ -145,22 +156,22 @@ app.IntegratedSearchViewEditDay = Backbone.View.extend({
         }
     },
 
-    // eatCheckedFoods: function(){
+    eatCheckedFoods: function(){
 
-    //     var myList = [];
+        var myList = [];
 
-    //     app.searchResults.each(function(food){
-    //         if(food.get('checked') === true){
+        app.searchResults.each(function(food){
+            if(food.get('checked') === true){
 
-    //             app.dailyTrackedFoods.add(food);
+                app.dailyTrackedFoods.add(food);
 
-    //             // Unchecks model after adding to app.dailyTrackedFoods
-    //             food.set({checked: false});
+                // Unchecks model after adding to app.dailyTrackedFoods
+                food.set({checked: false});
 
-    //             // Adds food to array to be removed from searched foods Collection
-    //             myList.push(food);
-    //         }
-    //     });
+                // Adds food to array to be removed from searched foods Collection
+                myList.push(food);
+            }
+        });
 
     //     /** Code only executed if user has actually selected a searched food to add to
     //       * their tracked foods collection
@@ -181,7 +192,28 @@ app.IntegratedSearchViewEditDay = Backbone.View.extend({
     //         this.userMessage.addClass('styled');
     //     }
 
-    // },
+        if (app.myClickedFood !== ""){
+                app.globalUserMessage = 'You just added the following to your tracked foods for today:\n' + '<br>' +  app.myClickedFood.get('brand') + ', ' + app.myClickedFood.get('type');
+
+                console.log(app.myClickedFood);
+                app.myClickedFood.set('checked', !app.myClickedFood.get('checked'));
+        } else {
+
+            app.globalUserMessage = "You haven't selected a food to add a serving of!" +'<br>' + "Please search for a food, select it, then click the button to add it.";
+            this.userMessage.addClass('styled');
+        }
+
+        app.myClickedFood = "";
+
+        //Resets user's view
+
+        //this.todayTab.click();
+
+        //Scrolls user's view to bottom of screen so that user message can be viewed and added food seen
+
+        this.bodyReference.scrollTop(this.docHeight);
+
+    },
 
     //Code for this function disabled, as function moved to part view EditView.js
 

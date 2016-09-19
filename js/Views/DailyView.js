@@ -66,6 +66,7 @@ app.DailyView = Backbone.View.extend({
         //<button type="button" id="all-selected"> Select All </button>
         $(this.el).append('<h1>Foods you'+"'ve" +' picked today: ' + '<br><br>' + '<span class="avoid-wrap" id="todays-date">' + this.todaysDay + ', ' + this.todaysDate + '</span>' +  '</h1><button type="button" class="add-button" id="add-serving"> Add New Food </button>');
         $(this.el).append('<hr><ul id="eaten-food"></ul><hr><br>');
+        $(this.el).append('<h1 id="user-message-footer"></h1><hr><br>');
         $(this.el).prepend('<h1 id="user-message"></h1>');
 
         //cache DOM queries
@@ -73,6 +74,22 @@ app.DailyView = Backbone.View.extend({
 
         //cache reference to user-message DOM element
         this.userMessage = $('#user-message', this.el);
+
+        //cache reference to user-message-footer DOM element
+        this.userMessageFooter = $('#user-message-footer', this.el);
+
+        //Logic that tests to see if there are any saved messages for the user prior to Today's Tab being reset
+        if (app.globalUserMessage === ""){
+          this.userMessageFooter.html("");
+          this.userMessageFooter.css("background-color", "white");
+
+        } else {
+          this.userMessageFooter.html(app.globalUserMessage);
+          this.userMessageFooter.css("background-color", "#f72");
+          // Empties app.globalUserMessage so that message to user is reset
+          app.globalUserMessage ="";
+
+        }
 
         _.bindAll(this, 'render', 'selectAll', 'clearSelected', 'addServing', 'removeFood', 'saveFoods', 'eatCheckedFoods', 'duplicateServing', 'emptyMessageDiv');
 

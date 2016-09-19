@@ -28,5 +28,6 @@ app.Food = Backbone.Model.extend({
 
     toggle: function(){
         this.set('checked', !this.get('checked'));
+        app.myClickedFood = this;
     }
 });

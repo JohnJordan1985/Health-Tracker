@@ -55,6 +55,14 @@ app.IntegratedSearchView = Backbone.View.extend({
         this.userMessage = $('#user-message', this.el);
 
         this.todayTab = $("#daily");
+
+        //Reference to body DOM element
+
+        this.bodyReference = $('html, body');
+
+        // Calcs document height for use later in code to redirect user to base of page
+
+        this.docHeight = $(document).height();
     },
 
     render: function(){
@@ -164,24 +172,52 @@ app.IntegratedSearchView = Backbone.View.extend({
           * their tracked foods collection
           */
 
-        if (myList.length > 0) {
-            //removes array of foods models that were added to daily tracking Collection
+        //19th September Edit: removed this code to use more efficient code below
 
-            app.searchResults.remove(myList);
+        // if (myList.length > 0) {
+        //     //removes array of foods models that were added to daily tracking Collection
 
-            //Passes to helper function to notify user indicating what foods were added to their tracked foods
+        //     app.searchResults.remove(myList);
 
-            app.notifyUser('You just added the following to your tracked foods for today', myList, '#user-message');
-            this.userMessage.addClass('styled');
+        //     //Passes message to global variable to display to user once food added to today's list
+
+        //     app.globalUserMessage = 'You just added the following to your tracked foods for today:\n' + '<br>' +   app.myClickedFood.get('type');
+
+        //     console.log(app.myClickedFood);
+        //     app.myClickedFood.set('checked', !app.myClickedFood.get('checked'));
+
+        //     //Passes to helper function to notify user indicating what foods were added to their tracked foods
+
+        //     // app.notifyUser('You just added the following to your tracked foods for today', myList, '#user-message');
+        //     this.userMessage.addClass('styled');
+        // } else {
+        //     //If no food items selected, inform user
+        //     app.notifyUser("You haven't selected a food to add a serving of!" +'<br>' + "Please search for a food, select it, then click the button to add it.", [], '#user-message');
+        //     this.userMessage.addClass('styled');
+        // }
+
+        if (app.myClickedFood !== ""){
+            app.globalUserMessage = 'You just added the following to your tracked foods for today:\n' + '<br>' +  app.myClickedFood.get('brand') + ' <i>(' + app.myClickedFood.get('type') + ')</i>';
+
+            console.log(app.myClickedFood);
+            app.myClickedFood.set('checked', !app.myClickedFood.get('checked'));
         } else {
-            //If no food items selected, inform user
-            app.notifyUser("You haven't selected a food to add a serving of!" +'<br>' + "Please search for a food, select it, then click the button to add it.", [], '#user-message');
+
+            app.globalUserMessage = "You haven't selected a food to add a serving of!" +'<br>' + "Please search for a food, select it, then click the button to add it.";
             this.userMessage.addClass('styled');
         }
+
+
+
+        app.myClickedFood = "";
 
         //Resets user's view
 
         this.todayTab.click();
+
+        //Scrolls user's view to bottom of screen so that user message can be viewed and added food seen
+
+        this.bodyReference.scrollTop(this.docHeight);
 
     },
 

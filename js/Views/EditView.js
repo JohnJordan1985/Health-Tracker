@@ -87,6 +87,8 @@ app.EditView = Backbone.View.extend({
         $(this.el).append('<br><h1 id="delete-button-container"><button class="delete-day-button" id="delete-day-button" type="button">Delete Day</button></h1>')
         $(this.el).prepend('<h1 id="user-message"></h1>');
 
+        $(this.el).append('<h1 id="user-message-footer"></h1><hr><br>');
+
         _.bindAll(this, 'render', 'selectAll', 'clearSelected', 'addServing', 'removeFood', 'saveFoods', 'addToEditedFoods', 'emptyMessageDiv', 'deleteDay', 'cancelDeletion', 'confirmDeletion', 'saveLog', 'duplicateServing', 'backToDayLog');
 
         //cache DOM queries
@@ -105,6 +107,16 @@ app.EditView = Backbone.View.extend({
         this.confirmationTemplate = _.template($("#deletion-confirmation").html());
 
         this.deleteButtonContainer = $('#delete-button-container', this.el);
+
+        this.userMessageFooter = $('#user-message-footer', this.el);
+
+        //Reference to body DOM element
+
+        this.bodyReference = $('html, body');
+
+        // Calcs document height for use later in code to redirect user to base of page
+
+        this.docHeight = $(document).height();
 
         this.render();
 
@@ -268,13 +280,17 @@ app.EditView = Backbone.View.extend({
 
             // Passes to helper function to notify user indicating what foods were added to their tracked foods
 
-            app.notifyUser('You just added the following to the day you are editing:<br>' + app.myDay, myList, '#user-message', 'other');
+            app.notifyUser('You just added the following to the day you are editing:<br>' + app.myDay, myList, '#user-message-footer', 'other');
             this.userMessage.addClass('styled');
 
         }
 
         console.log(myList);
         console.log(app.collectionSelectedFromLog);
+
+        //Scrolls user's view to bottom of screen so that user message can be viewed and added food seen
+
+        this.bodyReference.scrollTop(this.docHeight);
 
         //Force call to render method
         this.render();
