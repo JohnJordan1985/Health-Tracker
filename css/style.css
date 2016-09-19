@@ -1,0 +1,556 @@
+
+*{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	box-sizing: border-box;
+	font-family: Verdana;
+}
+
+/** @group detect mobile device */
+
+@media only screen and (max-width: 760px){
+	#mobile-screen{
+		display: none;
+	}
+}
+
+/** @group general styles */
+
+.grid {
+	margin: 0 auto;
+	width: 100%;
+	max-width: 45em;
+	text-align: center;
+	padding: 0.5em
+}
+
+/** @group header */
+
+header {
+	font-family: Arial Black;
+	font-weight: bold;
+	font-size: 2.5em;
+	background-color: #006;
+	padding: 0.5em;
+	text-align: center;
+	color: #fff;
+	letter-spacing: 1.5px;
+	display: block;
+	border: 1px outset #006;
+
+}
+
+.avoid-wrap {
+	display: inline-block;
+}
+
+.app-phrase {
+	font-family: Verdana;
+	font-style: italic;
+	font-size: 0.375em;
+	padding: none;
+}
+
+h1 {
+	font-size: 1em;
+	padding: 0.5em;
+	line-height: 1.5em;
+}
+
+p {
+	line-height: 1.5em
+}
+
+/** @home page */
+
+div.flex-section {
+	-webkit-display: inline-flex;
+	-moz-display: inline-flex;
+	-ms-display: inline-flex;
+	display: flex;
+	flex-wrap: wrap;
+	position: relative;
+}
+
+section.home-introduction  {
+	text-align: left;
+}
+
+section#news-section, #log-section {
+	background-color: #eee;
+}
+
+h1.home-heading {
+	font-size: 1em;
+	text-align: center;
+	background-color: #006;
+	padding: 0.5em;
+	text-align: center;
+	color: #fff;
+	letter-spacing: 1.5px;
+}
+
+.flex-section {
+	text-align: center;
+}
+
+.flex-section img {
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 1.25em;
+	margin-bottom: 1em;
+	max-width: 200px;
+
+}
+
+.flex-section p {
+	width: 65%;
+	text-align: center;
+}
+
+@media only screen and (max-width: 634px) {
+    /* For mobile phones: */
+    .flex-section p, .flex-section img {
+        width: 100%;
+    }
+}
+
+
+
+/** @group unordered lists */
+
+ul {
+	list-style-type: none;
+	/*box-shadow: 2.5px 2.55px 1.75px #999;*/
+	text-align: center;
+	padding: 0;
+	margin: 0 auto;
+	max-width: 500px;
+}
+
+li {
+	padding-bottom: 0.5em;
+	border: 1px solid #ccc;
+	border-radius: 30px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	max-width: 500px;
+	padding: 0px 15px 0px 15px;
+}
+div#article-headline {
+	text-align: center;
+	/*padding: 0px 15px 0px 15px;*/
+
+}
+
+div#clear-history-container, h1#user-message {
+	border-radius: 30px;
+}
+
+li:nth-child(odd){
+	background-color: #e6e6e6;
+}
+
+li:nth-child(even){
+	background-color: #ffffff;
+}
+
+li#search-results{
+	background-color: black;
+}
+
+ul li#eaten-food {
+	background-color: black;
+}
+
+
+li.article-item {
+	box-shadow-bottom: none;
+}
+
+h1.styled {
+	border: 1px solid #ccc;
+	box-shadow: 2.5px 2.55px 1.75px #999;
+}
+
+span.day {
+	padding-left: 0.5em
+}
+
+img.article-thumbnail{
+	margin-top: 1.5em;
+	width: 190px;
+	height: 126px;
+}
+
+/** @group tab buttons */
+
+/*.divider {
+    width: 0px;
+    height: auto;
+    display: inline-block;
+    background-color: #fff;
+}*/
+
+nav {
+	font-weight: bold;
+	text-align: center;
+	background-color: #00b;
+	font-size: 1.5em;
+    width: 100%;
+
+    -webkit-display: inline-flex;
+	-moz-display: inline-flex;
+	-ms-display: inline-flex;
+	display: flex;
+	flex-wrap: wrap;
+
+}
+
+nav button {
+
+	width: 20%;
+	min-width: 90px;
+	background-color: #00b;
+    /*border-style: solid;
+    border-color: white;
+    border-width: 2px;*/
+    border: none;
+    color: white;
+    padding: 0.25em;
+    text-align: center;
+    text-decoration: none;
+    font-size: 0.8em;
+    margin: 0 auto;
+    /*margin: 10px 5px 10px 5px;*/
+
+}
+
+nav div {
+	display: flex;
+	width: 100%;
+	border: 1px solid;
+	border-width: thin;
+}
+
+/*button.tab {
+	border: 1px outset #006;
+	border-bottom: none;
+}
+
+button.tab-bottom {
+	border: 1px outset #006;
+	border-top: none;
+}*/
+
+section {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+#average-calories-container {
+	position: absolute;
+	width: 100%;
+ 	height: 25%;
+ 	margin-top: 15em;
+}
+
+#average-calories {
+	font-weight: bold;
+}
+
+input {
+	padding: 0.5em;
+}
+
+.date-input{
+	text-align: center
+}
+
+.drop-down {
+	padding-left: 20px;
+	height: 33px;
+	width: 200px;
+}
+
+.drop-down-cancel {
+	padding-left: 50px;
+	height: 33px;
+	width: 200px;
+}
+
+/*Smaller buttons for additon of food queries*/
+
+#cancel-button-editDay{
+	background-color: #f22;
+	color: #fff;
+}
+
+#cancel-range{
+	background-color: #f22;
+	color: #fff;
+}
+
+.drop-down-single {
+	padding-left: 20px;
+	height: 33px;
+	width: 150px;
+}
+/** @group buttons */
+
+button {
+
+	width: 170px;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+	margin-right: 0.25em;
+	margin-left: 0.25em;
+	padding: 0.75em 1em 0.75em 1em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1em;
+}
+
+button.cancel-button {
+	width: 110px;
+	font-weight: bold;
+	font-size: 1em;
+	background-color: #f22;
+	color: #fff;
+}
+
+button.clear {
+	background-color: #006;
+	color: #fff;
+}
+
+
+button.delete-button {
+	width: 125px;
+	font-weight: bold;
+	background-color: #f22;
+	color: #fff;
+}
+
+button.delete-day-button {
+	width: 160px;
+	font-weight: bold;
+	background: rgba(255,34,34,0.75);
+	color: #fff;
+}
+
+button.add-button {
+
+	font-weight: bold;
+	background-color: #3c3;
+	color: #fff;
+}
+
+button#yes-permanent-delete {
+	background: rgba(51,204,51, 0.75);
+}
+
+button.no-delete {
+	margin-top: 1em;
+	/*margin-right: 1em;*/
+	font-weight: bold;
+	background-color: white;
+	color: #3c3;
+}
+
+button.yes-delete {
+	margin-top: 1em;
+	/*margin-left: 1em;*/
+	padding: 0.75em 1.5em 0.75em 1.5em;
+	font-weight: bold;
+	background-color: #f22;
+	color: white;
+}
+
+button.add-serving-button {
+	margin: 0 auto;
+	vertical-align: middle;
+	padding: 0px 15px 0px 10px;
+	display:inline-block;
+    width:60px;
+    height:60px;
+    line-height:10px;
+    border: 2px solid #f5f5f5;
+    border-radius: 50%;
+    color:#f5f5f5;
+    text-align: left;
+    position: absolute;
+    left: 0;
+    /*float:left;*/
+    background: #3c3;
+    background: rgba(51,204,51,0.75);
+    box-shadow: 0 0 3px gray;
+    font-size:1em;
+    font-weight:bold;
+}
+button.add-serving-button:hover {
+	background: #f5f5f5;
+	color:#3c3;
+}
+
+
+button.edit-day{
+	margin: auto;
+	/*vertical-align: middle;*/
+	padding: 0px 15px 0px 10px;
+	display:inline-block;
+    width:60px;
+    height:60px;
+    line-height:20px;
+    border: 2px solid #f5f5f5;
+    border-radius: 50%;
+    color:#f5f5f5;
+    text-align: left;
+    float:left;
+    background: #f72;
+    background: rgba(255,119,34,0.75);
+    box-shadow: 0 0 3px gray;
+    font-size:1em;
+    font-weight:bold;
+
+}
+button.delete-serving-button{
+	margin:0 auto;
+	/*margin-left: 6px;*/
+	margin-top: 80px;
+	padding: 0px 10px 0px 10px;
+	vertical-align: middle;
+	display:inline-block;
+    width:60px;
+    height:60px;
+    line-height:10px;
+    border: 2px solid #f5f5f5;
+    border-radius: 50%;
+    color:#f5f5f5;
+    text-align:center;
+    /*float:left;*/
+    position: absolute;
+    left: 0;
+    top: 200;
+    text-decoration:none;
+    /*background: #f22;*/
+    background: rgba(255,34,34,0.75);
+    box-shadow: 0 0 3px gray;
+    font-size:1em;
+    font-weight:bold;
+}
+
+button.delete-serving-button:hover {
+	background: #f5f5f5;
+
+	color:#f22;
+}
+
+/* Wrapper to position add serving and delete serving buttons correctly */
+
+div#wrapper-food-list {
+	position: relative;
+}
+
+
+
+button.drop-down {
+	padding: 0px 10px 0px 10px;
+	vertical-align: middle;
+	width:125px;
+	/*font-weight: bold;
+	font-size: 1em;
+	background-color: #f22;
+	color: #fff;*/
+}
+.drop-down-wrong {
+	font-weight: bold;
+	/*color: white;
+    text-shadow: -2px 0 #f22, 0 2px #f22, 2px 0 #f22, 0 -2px #f22;*/
+    /*text-shadow: -1px 0 #f22, 0 1px #f22, 1px 0 #f22, 0 -1px #f22;*/
+}
+
+button.big-button {
+	width: 225px;
+}
+
+/** @group analysis table*/
+
+select{
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+span#calories-consumed-today{
+	font-size: 3em
+}
+
+h3:nth-child(even) {
+	background-color: #eee
+}
+
+section#analysis table {
+ 	position: absolute;
+ 	width: 100%;
+ 	height: 100%;
+ 	margin-top: 5em;
+ 	margin-bottom: 3.5em;
+ 	left: 50%;
+ 	margin-left: -50%;
+}
+
+form {
+	padding: 1em;
+}
+
+th {
+	padding: 0.8em;
+	background-color: #00b;
+	color: white
+}
+
+th, td {
+	border-bottom: 1px solid #ddd
+}
+
+tr:hover {
+	background-color: #f72
+}
+
+tr:nth-child(odd) {
+	background-color: #eee
+}
+
+tr:nth-child(odd):hover {
+	background-color:#f72
+}
+
+tr td{
+	text-align: center
+}
+
+td.macronutrient-type {
+	text-align: center;
+
+}
+
+table#food-macro-table {
+	/*text-align: right;*/
+	/*padding-left: 50px;*/
+
+	width: 75%;
+
+	margin-left: 80px;
+
+
+}
+
+span#date-picked, #todays-date, #dates-being-displayed {
+	font-size: 1.5em;
+	color: #8B008B;
+}
+

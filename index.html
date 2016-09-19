@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<meta name ='author' content ='John Jordan'>
+	<meta name='description' content = "Trackers user's daily calorie and macronutrient intake">
+	<link rel='stylesheet' href='css/style.css'>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<title>Health Tracker</title>
+</head>
+<body>
+	<div class="grid">
+		<header><span class="avoid-wrap">Health</span><span>Tracker</span>
+			<p class="app-phrase">Track your food intake, day by day</p>
+		</header>
+		<nav></nav>
+		<section id='user-view'>
+		</section>
+
+		<script type="text/template" id="home-template">
+			<section class="home-page" id="home-introduction">
+				<p>
+
+					Welcome to my <b>HealthTracker </b> application.
+
+
+					This backbone.js based project was completed as part of my <b>Udacity Front-End Web Development Nanodegree.</b>
+				</p>
+				<p>
+
+					It allows the user to track and analyse their food intake on a day-by-day basis.
+
+					Please read this page to learn how to use the application.
+				</p>
+			</section>
+			<section class="home-page" id="today-section">
+				<h1 class="home-heading">Today</h1>
+				<div class="flex-section" id="home-today">
+					<p>
+						The "Today" tab is where you add foods to the current calendar day.
+						Clicking on the 'Add New Food' button will open up a window that will allow you to search the Nutritionix API for food.
+					</p>
+					<img src="assets/images/todayTab.png"  alt="A picture of the Today tab">
+
+					<p>
+						Once you have typed the food you want into the search box, hit submit and a list of matching food items will be displayed. Simply click on the one you want and it will be added to your total for today.
+					</p>
+					<img src="assets/images/todayTabSearchMark.png"  alt="A picture of the Today tab">
+				</div>
+			</section>
+
+			<section class="home-page" id="news-section">
+				<h1 class="home-heading">News</h1>
+				<div class="flex-section" id="home-news">
+					<p> The News tab displays a list of articles taken from the New York Times API. The articles shown will change depending on your food intake, with more articles about vegetables being displayed if you eat more vegetables.</p>
+					<img src="assets/images/newsTab.png" alt="A picture of the News tab">
+				</div>
+
+			</section>
+
+			<section class="home-page" id="analysis-section">
+				<h1 class="home-heading">Analysis</h1>
+				<div class="flex-section" id="home-analysis">
+					<p> The Analysis tab initialy displays your calorie count for the current calendar day. If you click
+						on the 'Date Range' button indicated, you will be taken a new screen that allows you to view your
+						calorie and macronutrient intake over a given range of dates.
+
+					</p>
+					<img src="assets/images/analysisTabMark.png"  alt="A picture of the Analysis tab">
+
+					<p> Once you have selected a date range to view, you will have various options, such as viewing the total calories and macronutrients, or the average value over the range you selected. Just click the appropriate button at the bottom of the Analysis tab, as indicated.
+
+					</p>
+					<img src="assets/images/analysisTabDateRangeMark.png"  alt="A picture of the Analysis tab">
+				</div>
+
+			</section>
+
+			<section class="home-page" id="log-section">
+				<h1 class="home-heading">Log</h1>
+				<div class="flex-section" id="home-log">
+					<p> The Log tab displays a list of past days that the user has recorded - note, neither today nor future days appear in the Log tab. The current day will be automatically added to this list at 00:00 GMT. The Log tab provides a number of functions for the user to perform.
+
+						<br><br>
+						The simplest is the 'Sort List' button that will alternatively display the list in chronological order, or reverse it.
+
+					</p>
+
+					<img src="assets/images/logTabMark.png" alt="A picture of the Log tab">
+
+
+
+					<p> You can add a new day to the current log by clicking the 'Add New Day' button. Again, you can only add past days to the log, not today nor any future days. If the day you are trying to add already exists, the request will be denied and you will be notified.
+
+					</p>
+					<img src="assets/images/analysisTabNewDate.png"  alt="A picture of the Log tab">
+
+					<p>
+						You can <b>edit</b> the recorded foods for a given day by clicking on the orange <b>'Edit Day' </b> button contained within each day in the list. You will be taken to a new screen that behaves exactly as the Today tab does, so please review the material above if you need to.
+					</p>
+					<p>
+						The day you are editing will be clearly displayed. This screen also allows you to <b>delete the day</b> you have selected by clicking on the 'Delete Day' button. Once deleted, a day <b>cannot be recovered</b>, so be careful.
+					</p>
+					<img src="assets/images/logTabEditDayMark.png" alt="A picture of the Edit Day tab">
+
+					<p>
+						Finally, if you want to delete your <b>ENTIRE</b> log of past days, then click the 'Yes' button indicated at the bottom of the tab. You will be asked to <b>confirm</b> and if you do, your entire record will be <b>permanently deleted</b>.
+					</p>
+					<img src="assets/images/logTabDeleteAllMark.png"  alt="A picture of the Log tab">
+				</div>
+
+			</section>
+
+
+
+		</script>
+
+		<script type='text/template' id='results-template'>
+				<br>
+				<span class="search-results"><b><%= brand %> (<%=type %>)</span></b>
+				<input class="search-results" type="checkbox" value="1" name=""></input>
+				<p class="search-results">
+					<span class="search-results">Serving Unit: <%= servingUnitSize %> <%=unit %></span><br>
+				 	<%=gramUnit %> grams per serving
+				</p>
+			</script>
+
+		<script type="text/template" id="eaten-template">
+
+			<div id="wrapper-food-list">
+			<button type="button" class="add-serving-button" id="duplicate-serving">ADD <br><br> &nbsp;+1</button>
+				<h1 style="padding-left: 80px; max-width: 500px">
+
+
+					<input type="checkbox" value="1" name=""></input>
+					<b><%= brand %> </b> <i>(<%= type %>)</i>
+					<button type="button" class="delete-serving-button">DEL</button>
+				</h1>
+			</div>
+
+
+			<!-- Breakline hack designed to display DEL button underneath Add button -->
+
+
+
+			<!--<p>
+				<div>Serving: <%= servingUnitSize %> <%=unit %> (<%= gramUnit %>  grams)</div>
+
+				<div>Calories: <%= calories %> cal</div>
+				<button type="button" class="delete-serving-button">DEL</button>
+				<div>Protein: <%= protein %> g</div>
+				<div>Fat: <%= fat %>g</div>
+				<div>Carbohydrate:  <%= carbs %> g</div>
+
+			</p> -->
+
+			<div style="text-align: center">
+				<table id="food-macro-table">
+					<tr>
+						<td class="macronutrient-type">
+							Serving:
+						</td>
+						<td>
+							&nbsp;<%= Math.round(servingUnitSize) %> <%=unit %>
+						</td>
+					</tr>
+					<tr>
+						<td class="macronutrient-type">
+							<b>Calories:</b>
+						</td>
+						<td>
+							<b><%= Math.round(calories) %> cal</b>
+						</td>
+					</tr>
+					<tr>
+						<td class="macronutrient-type">
+							Protein:
+						</td>
+						<td>
+							<%= Math.round(protein) %> g
+						</td>
+					</tr>
+
+					<tr>
+						<td class="macronutrient-type">
+							Fat:
+						</td>
+						<td>
+							<%= Math.round(fat) %> g
+						</td>
+					</tr>
+
+					<tr>
+						<td class="macronutrient-type">
+							Carbohydrate:
+						</td>
+						<td>
+							<%= Math.round(carbs) %> g
+						</td>
+					</tr>
+
+				</table>
+			</div>
+
+
+
+			<div style="clear:both"></div>
+		</script>
+
+		<section class='analysis' id='analysis'>
+			<script type='text/template' id='table-template'>
+				<h1>Calorie and Macronutrient Analysis for: <div id="dates-being-displayed"></div><br><div id="number-of-days"></div></h1>
+				<p id="average-or-totals" style="color:#f22"></p>
+				<h1><span id="calories-consumed-today"></span> <span id="calorie-units">kcal</span></h1>
+				<h3 ><span style="float:left">Protein (g):</span><span id='protein-total'>0</span><span style="float:right">(<span  id='protein-calories'>0</span>%)</span></h3>
+				<h3><span style="float:left">Fat (g):&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</span> <span id='fat-total'>0</span><span style="float:right">(<span id='fat-calories'>0</span>%)</span></h3>
+				<h3><span style="float:left">Carbs (g):&nbsp&nbsp&nbsp</span> <span id='carbohydrate-total'>0</span><span style="float:right">(<span id='carbohydrate-calories'>0</span>%)</span></h3>
+
+				<!--<p>Please enter the date range you would like view. Dates entered must be in DD Month YYYY format, e.g. 21 March 2016</p>
+				<form>
+					<span>Start Date:</span> <div><input type='text' class='date-input' id='start-date-input'></div>
+					<span>End Date:</span><div><input type='text' class='date-input' id='end-date-input'></div>
+				</form>-->
+				<!--
+				<table>
+					<th></th>
+					<th>Amount Consumed</th>
+					<th>% Total Calories</th>
+					<tr><td>Protein (grams)</td><td id='protein-total'>0</td><td><span id='protein-calories'>0</span></td></tr>
+					<tr><td>Fat (grams)</td><td id='fat-total'>0</td><td><span id='fat-calories'>0</span></td></tr>
+					<tr>
+						<td>Carbohydrate (grams)</td>
+						<td id='carbohydrate-total'>0</td>
+						<td><span id='carbohydrate-calories'>0</span></td>
+					</tr>
+					<tr>
+						<td>Calories (cal)</td>
+						<td><span id='calorie-total'>0</span></td>
+						<td><span id='calorie-calories'> %</td>
+					</tr>
+				</table>-->
+			</script>
+
+			<script type="text/template" id="date-range-confirmation">
+				<h1>Please select a date range to view:</h1>
+				From: &nbsp<select class="drop-down" size="1" id="drop-down-menu-start"></select><p id="start-date-wrong" class="drop-down-wrong"></p>
+				To: &nbsp&nbsp&nbsp&nbsp&nbsp<select class="drop-down" size="1" id="drop-down-menu-end"></select><p id="end-date-wrong" class="drop-down-wrong"></p>
+				<button class="drop-down" id="cancel-range" type="button">Cancel</button>
+				<button class="drop-down" id="add-range" type="button">View</button>
+
+			</script>
+
+			<script type='text/template' id='article-template'>
+
+				<div id="article-headline">
+					<br>
+					<%= headline %>
+				</div>
+				<img class="article-thumbnail" src= <%= imgUrl %> onerror=
+				'this.src="assets/images/NYTThumbnail.jpg"; this.onerror=""' alt=''>
+				<p> <%= paragraph %> </p>
+			</script>
+
+			<script type='text/template' id='log-template'>
+
+				<p>
+					<span class="day" style="float:left"><b><%= day %></b></span>
+					<span style="margin: 0 auto"> <b><%= id %></b></span>
+
+					<!--<span style="float:right"><input type='checkbox' value='1'></input>-->
+
+				</p>
+				<button class="edit-day" type="button">Edit Day</button>
+				<br>
+
+				<div><b>Total Calories: <%= calorieTotal %> kcal</b></div>
+				<br>
+				<p>
+					<span>Totals (g) - Protein: <%= proteinTotal %></span>
+					<span>, Carbs: <%= carbTotal %></span>
+					<span>, Fat: <%= fatTotal %></span>
+				</p>
+
+				<!--Applies Clearfix solution so that boundaries of floating elements appropriately calculated -->
+				<div style="clear:both"></div>
+
+			</script>
+
+			<script type="text/template" id="deletion-confirmation">
+				<p>Are you sure you want to pernamently delete the following day? </p> <span><%=day %>, <%= id %></span><br>
+				<button class="no-delete" type="button" id="no-delete">No</button>
+				<button class="yes-delete" type="button" id="yes-delete">Yes</button>
+			</script>
+
+			<script type="text/template" id="permanent-deletion-confirmation">
+				<br>
+				<p>Are you sure you want to <b>permanently delete</b> your entire daily food history? </p>
+				<br>
+				<button class="no-delete" type="button" id="no-confirm-permanent-delete">No</button>
+				<button class="yes-delete" type="button" id="yes-confirm-permanent-delete">Yes</button>
+			</script>
+
+
+			<script type="text/template" id="addition-confirmation">
+			<p>Please select a year, a month and a day for the day you would like to add</p>
+
+				<div>Year:</div>
+				 <!--<span style="font-weight: normal"><i>(YYYY)</i></span> </span><div>1: <input type='text' class='date-input' id='year-input'></div> -->
+
+				<select id="year-dropdown" class="drop-down-single"></select>
+
+				<div>Month:</div>
+
+				<!--</span><span style="font-weight: normal"><i>(e.g. 'April')</i></span><div>2: <input type='text' class='date-input' id='month-input'></div> -->
+
+				<select id="month-dropdown" class="drop-down-single"></select>
+				<div>Day: </div>
+
+				<!--</span><span style="font-weight: normal"><i>(DD)</i></span><div>3: <input type='text' class='date-input' id='day-input'></div> -->
+
+				<select id="day-dropdown" class="drop-down-single"></select>
+				<div>
+					<button class="yes-delete" type="button" id="cancel-addition">Cancel</button>
+					<button class="no-delete" type="button" id="confirm-addition">Add</button>
+				</div>
+			</script>
+
+		</section>
+	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.3.3/underscore-min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone-localstorage.js/1.0/backbone.localStorage-min.js"></script>
+	<script src="js/Helpers.js"></script>
+	<script src="js/Models/Food.js"></script>
+	<script src="js/Models/Article.js"></script>
+	<script src="js/Models/Day.js"></script>
+	<script src="js/Collections/FoodList.js"></script>
+	<script src="js/Collections/Days.js"></script>
+	<script src="js/Views/FoodView.js"></script>
+	<script src="js/Views/EditView.js"></script>
+	<script src="js/Views/SearchView.js"></script>
+	<script src="js/Views/DailyView.js"></script>
+	<script src="js/Views/AnalysisView.js"></script>
+	<script src="js/Views/NewsView.js"></script>
+	<script src="js/Views/ArticleView.js"></script>
+	<script src="js/Views/AppView.js"></script>
+	<script src="js/Views/DayListView.js"></script>
+	<script src="js/Views/LogView.js"></script>
+	<script src="js/Views/HomeView.js"></script>
+	<script src="js/Views/AddDayView.js"></script>
+	<script src="js/Script.js"></script>
+	<script src="js/Views/IntegratedSearchView.js"></script>
+	<script src="js/Views/IntegratedSearchViewEditDay.js"></script>
+</body>
+</html>
