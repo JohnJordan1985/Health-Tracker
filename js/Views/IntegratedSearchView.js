@@ -201,6 +201,10 @@ app.IntegratedSearchView = Backbone.View.extend({
 
             console.log(app.myClickedFood);
             app.myClickedFood.set('checked', !app.myClickedFood.get('checked'));
+
+            //Sept Edit
+            //Remove selected food from returned search results
+            app.searchResults.remove(app.myClickedFood);
         } else {
 
             app.globalUserMessage = "You haven't selected a food to add a serving of!" +'<br>' + "Please search for a food, select it, then click the button to add it.";

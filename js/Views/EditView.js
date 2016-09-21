@@ -83,11 +83,10 @@ app.EditView = Backbone.View.extend({
 
         $(this.el).append('<h1 id="edit-info">You are currently editing:<br> <span class="avoid-wrap" id="date-picked"></span></h1><button type="button" class="back-button">Back to Log</button><button type="button" class="add-button" id="add-serving">Add New Food </button>');
         $(this.el).append('<hr><ul id="eaten-food"></ul><hr><br>');
-        //'Delete Day' button
-        $(this.el).append('<br><h1 id="delete-button-container"><button class="delete-day-button" id="delete-day-button" type="button">Delete Day</button></h1>')
+
         $(this.el).prepend('<h1 id="user-message"></h1>');
 
-        _.bindAll(this, 'render', 'selectAll', 'clearSelected', 'addServing', 'removeFood', 'saveFoods', 'addToEditedFoods', 'emptyMessageDiv', 'deleteDay', 'cancelDeletion', 'confirmDeletion', 'saveLog', 'duplicateServing', 'backToDayLog');
+        _.bindAll(this, 'render', 'selectAll', 'clearSelected', 'addServing', 'removeFood', 'saveFoods', 'addToEditedFoods', 'emptyMessageDiv', 'deleteDay', 'cancelDeletion', 'confirmDeletion', 'saveLog', 'duplicateServing', 'backToDayLog', 'emptyMessageFooterH1');
 
         //cache DOM queries
         this.list = $('#eaten-food', this.el);
@@ -105,6 +104,46 @@ app.EditView = Backbone.View.extend({
         this.confirmationTemplate = _.template($("#deletion-confirmation").html());
 
         this.deleteButtonContainer = $('#delete-button-container', this.el);
+
+        //September 20th Edit: Creates footer to notify user that food added to edited day
+
+        $(this.el).append('<h1 id="user-message-footer"></h1><hr><br>');
+
+        //cache reference to user-message-footer DOM element
+        this.userMessageFooter = $('#user-message-footer', this.el);
+
+        //'Delete Day' button
+        $(this.el).append('<br><h1 id="delete-button-container"><button class="delete-day-button" id="delete-day-button" type="button">Delete Day</button></h1>');
+
+        //September 20th Edit: Following code pasted from DailyView.js to replicate behaviour to
+        //notify user that new food has been added to the edited day's list.
+
+        //Logic that tests to see if there are any saved messages for the user prior to Today's Tab being reset
+        if (app.globalUserMessage === ""){
+          this.userMessageFooter.html("");
+          this.userMessageFooter.css("background-color", "white");
+
+        } else {
+          this.userMessageFooter.html(app.globalUserMessage);
+          this.userMessageFooter.css("background-color", "#f72");
+          // Empties app.globalUserMessage so that message to user is reset
+          app.globalUserMessage ="";
+
+        }
+
+        //String that contains day and date of the currently edited date for display to user.
+
+        app.stringOfEditDayDate = app.daySelectedFromLog + ', '+app.dateSelectedFromLog;
+
+        //end September 20th edit
+
+        //Reference to body DOM element
+
+        this.bodyReference = $('html, body');
+
+        // Calcs document height for use later in code to redirect user to base of page
+
+        this.docHeight = $(document).height();
 
         this.render();
 
@@ -176,6 +215,14 @@ app.EditView = Backbone.View.extend({
             //Notify user of foods removed
             app.notifyUser('You just deleted the following:', removeArray, '#user-message', '#f22');
             $("#user-message").addClass('styled');
+
+            //Scrolls user's view to top of screen so that user message can be viewed and added food seen
+
+            this.bodyReference.scrollTop(0);
+
+            //Empties user-message-footer h1 element
+
+            this.emptyMessageFooterH1();
         } else {
             app.notifyUser("You haven't selected a food to delete!" +'<br>' + "If you want to delete a food, please select it from the list, then press the 'Delete' button.", [], '#user-message', 'red');
             this.userMessage.addClass('styled');
@@ -257,27 +304,76 @@ app.EditView = Backbone.View.extend({
             }
         }, this);
 
+        console.log('My clicked food is: ');
+        console.log(app.myClickedFood);
+
+        //Edit September 19th 10:40
+
         /** Code only executed if user has actually selected a searched food
           * to add to their tracked foods collection
           */
 
-        if (myList.length > 0) {
-            // removes array of foods models that were added to daily tracking Collection
+        // if (myList.length > 0) {
+        //     // removes array of foods models that were added to daily tracking Collection
 
-            app.searchResults.remove(myList);
+        //     app.searchResults.remove(myList);
 
-            // Passes to helper function to notify user indicating what foods were added to their tracked foods
+        //     // Passes to helper function to notify user indicating what foods were added to their tracked foods
 
-            app.notifyUser('You just added the following to the day you are editing:<br>' + app.myDay, myList, '#user-message', 'other');
+        //     app.notifyUser('You just added the following to the day you are editing:<br>' + app.myDay, myList, '#user-message', 'other');
+        //     this.userMessage.addClass('styled');
+
+        // }
+
+        // console.log(myList);
+        // console.log(app.collectionSelectedFromLog);
+
+        if (app.myClickedFood !== ""){
+            app.globalUserMessage = 'You just added the following to your tracked foods for ' + app.stringOfEditDayDate + ':\n' + '<br>' +  app.myClickedFood.get('brand') + ' <i>(' + app.myClickedFood.get('type') + ')</i>';
+
+            console.log(app.myClickedFood);
+            app.myClickedFood.set('checked', !app.myClickedFood.get('checked'));
+
+            //Sept Edit
+            //Remove selected food from returned search results
+            app.searchResults.remove(app.myClickedFood);
+        } else {
+
+            app.globalUserMessage = "You haven't selected a food to add a serving of!" +'<br>' + "Please search for a food, select it, then click the button to add it.";
             this.userMessage.addClass('styled');
-
         }
 
-        console.log(myList);
-        console.log(app.collectionSelectedFromLog);
+
 
         //Force call to render method
-        this.render();
+        //Sept 19 Edit
+        // this.render();
+
+        //Refresh Edit view? to display changes
+        app.appView.createEditView();
+
+        //Scroll to bottom of page when new food added
+
+        this.bodyReference.scrollTop(this.docHeight);
+
+        //Change checked status of recently added food item to 'false' two seconds after adding it
+
+        //September Edit: Create global reference to Model as app.myClickedFood is going to be wiped
+
+        app.myFoodReference = app.myClickedFood;
+
+        app.myFoodReference.set('checked', true);
+
+        //Timeout call that resets checked value of Model after user alerted that new food added
+
+        setTimeout(function(){
+            app.myFoodReference.set('checked', false);
+            //Wipe global reference
+            app.myFoodReference = "";
+        }, 2000);
+
+        app.myClickedFood = "";
+
         this.saveLog();
     },
 
@@ -369,44 +465,114 @@ app.EditView = Backbone.View.extend({
     //app.collectionSelectedFromLog, rather than 'app.dailyTrackedFoods'
 
     duplicateServing: function(){
+        //In order to set selected Food model toggle status to 'false'
+        //need to explictly set it to 'false', as it will be triggered once
+        //user clicks on 'Add +1' button
 
-        var addedFoods = [];
+        app.myClickedFood.set('checked', false);
 
-        app.collectionSelectedFromLog.each(function(model){
 
-            if (model.get('checked') === true) {
+        //Note! Creating new Backbone Model needs properties formatted as JSON
 
-                //Creates new Food model using data pulled from selected Food model
+        // var duplicateFood = new app.Food(app.myClickedFood);
+        // console.log(duplicateFood);
 
-                var m = new app.Food(model.toJSON());
-                //Reset toggle status of duplicated Food model
-                model.toggle();
-                m.toggle();
+        app.duplicateFoodJSON = new app.Food(app.myClickedFood.toJSON());
 
-                //Adds clone of selected Food model to holder array
-                addedFoods.push(m);
-            }
-        }, this);
+        //Confirmed that duplicateFoodJSON is a new Backbone Model
+        //console.log(duplicateFoodJSON);
 
-        if (addedFoods.length > 0) {
-            //Add servings of selected foods to tracked foods collection
 
-            app.collectionSelectedFromLog.add(addedFoods);
+        //Add servings of clicked food to tracked foods collection from the day selected from LogView
+        app.collectionSelectedFromLog.add(app.duplicateFoodJSON);
 
-            //app.Notify user of foods servings that have been added
+        //Notify user of foods servings that have been added
 
-            app.notifyUser('You just added servings of the following foods', addedFoods, '#user-message');
-            this.userMessage.addClass('styled');
-        } else {
+        app.globalUserMessage = 'You just added the following to your tracked foods for today:\n' + '<br>' +  app.duplicateFoodJSON.get('brand') + ' <i>(' + app.duplicateFoodJSON.get('type') + ')</i>';
 
-            app.notifyUser("You haven't selected a food to add a serving of!" +'<br>' + "If you want to add a food item, please go to the 'Search For Food' tab", [], '#user-message');
-            this.userMessage.addClass('styled');
-        }
+
+        app.duplicateFoodJSON.set('checked', true);
+
+        //Timeout call that resets checked value of Model after user alerted that new food added
+
+        setTimeout(function(){
+            app.duplicateFoodJSON.set('checked', false);
+            //Wipe global reference
+            app.duplicateFoodJSON = "";
+        }, 2000);
+
+        //Scrolls user's view to bottom of screen so that user message can be viewed and added food seen
+
+        this.bodyReference.scrollTop(this.docHeight);
+
+        //Edit Don't need this code anymore
+
+        // //Empties user-message-footer h1 element
+
+        // this.emptyMessageFooterH1();
+
+        //end edit
+
+        this.userMessageFooter.html(app.globalUserMessage);
+        this.userMessageFooter.css("background-color", "#f72");
+        // Empties app.globalUserMessage so that message to user is reset
+        app.globalUserMessage ="";
+
+        //Empties global variable
+
+        app.myClickedFood = "";
+
+        //edit 21 September
+
+        // var addedFoods = [];
+
+        // app.collectionSelectedFromLog.each(function(model){
+
+        //     if (model.get('checked') === true) {
+
+        //         //Creates new Food model using data pulled from selected Food model
+
+        //         var m = new app.Food(model.toJSON());
+        //         //Reset toggle status of duplicated Food model
+        //         model.toggle();
+        //         m.toggle();
+
+        //         //Adds clone of selected Food model to holder array
+        //         addedFoods.push(m);
+        //     }
+        // }, this);
+
+        // if (addedFoods.length > 0) {
+        //     //Add servings of selected foods to tracked foods collection
+
+        //     app.collectionSelectedFromLog.add(addedFoods);
+
+        //     //app.Notify user of foods servings that have been added
+
+        //     app.notifyUser('You just added servings of the following foods', addedFoods, '#user-message');
+        //     this.userMessage.addClass('styled');
+        // } else {
+
+        //     app.notifyUser("You haven't selected a food to add a serving of!" +'<br>' + "If you want to add a food item, please go to the 'Search For Food' tab", [], '#user-message');
+        //     this.userMessage.addClass('styled');
+        // }
+        //end edit 21 September 2016
+
     },
 
     //Function that takes users back to Daily Log View
     backToDayLog: function(){
         $('#log').click();
+    },
+
+    // Function that clears out DOM element displayed at base of screen
+
+    emptyMessageFooterH1: function(){
+
+        this.userMessageFooter.empty();
+        this.userMessageFooter.removeClass('styled');
+        this.userMessageFooter.css('background-color', 'white');
+
     }
 
 });
