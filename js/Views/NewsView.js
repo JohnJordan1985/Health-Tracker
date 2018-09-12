@@ -14,7 +14,7 @@ var app = app || {};
 app.searchTerm = '';
 app.nytBaseUrl = 'https://api.nytimes.com/svc/search/v2/articlesearch.json?q=';
 app.nytFilter = '&fq=news_desk: ("Health" "Dining" "Food")&limit=5';
-app.nytApiKey = '2141985155bf38e1c8c4b50d991bffa1:13:73566414';
+app.nytApiKey = '49c5f3337b46444da46d054cd21235fd'; // updated 12th September 2018
 app.nytFullUrl = app.nytBaseUrl + app.searchTerm + app.nytFilter + '&sort=newest&api-key=' + app.nytApiKey;
 
 app.articleCollection = new Backbone.Collection();
